@@ -18,6 +18,11 @@ class Api::V1::UsersController < ApplicationController
     }, status: :ok
   end
 
+  def update
+    @user.update(user_params)
+    head :no_content
+  end
+
   private
 
   def user_params
