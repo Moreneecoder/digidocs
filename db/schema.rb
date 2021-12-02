@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_02_143804) do
+ActiveRecord::Schema.define(version: 2021_12_02_211029) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_143804) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "office_address"
-    t.boolean "is_doctor"
+    t.boolean "is_doctor", default: false
   end
 
   add_foreign_key "appointments", "users"
