@@ -1,9 +1,13 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show update destroy]
   def index
-    @users = User.where(is_doctor: nil).all
-
+    @users = User.where(is_doctor: false).all
     render json: @users, status: :ok
+  end
+
+  def create
+    @user = User.create!(user_params)
+    render json: @users, status: :created
   end
 
   def show
