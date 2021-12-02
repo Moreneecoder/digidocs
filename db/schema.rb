@@ -12,9 +12,12 @@
 
 ActiveRecord::Schema.define(version: 2021_12_02_211029) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "appointments", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "doctor_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "doctor_id", null: false
     t.string "title"
     t.text "description"
     t.datetime "time"
