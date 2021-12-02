@@ -1,10 +1,11 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: %i[show update destroy]
   def index
     @users = User.where(is_doctor: nil).all
 
     render json: @users, status: :ok
   end
+
   def show
     render json: {
       name: @user.name,
