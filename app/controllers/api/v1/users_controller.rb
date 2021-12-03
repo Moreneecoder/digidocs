@@ -1,5 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show update destroy]
+  before_action :reject_attempt_to_create_doctor, only: %i[create]
+
   def index
     @patients = User.patient.all
     render json: @patients, status: :ok
@@ -32,10 +34,18 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     # whitelist params
-    params.permit(:name, :phone, :email, :office_address, :is_doctor)
+    # params.permit(:name, :phone, :email, :office_address, :is_doctor)
+    params.permit(:name, :phone, :email)
   end
 
   def set_user
     @patient = User.patient.find(params[:id])
+  end
+
+  def reject_attempt_to_create_doctor
+    return unless params[:controller] == 'api/v1/users' && (params[:is_doctor] || params[:office_address])
+
+    render json: { error: "Can't create doctor from a users endpoint" },
+           status: :forbidden
   end
 end
