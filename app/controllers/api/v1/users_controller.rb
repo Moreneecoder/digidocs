@@ -45,7 +45,7 @@ class Api::V1::UsersController < ApplicationController
   def reject_attempt_to_create_doctor
     return unless params[:controller] == 'api/v1/users' && (params[:is_doctor] || params[:office_address])
 
-    render json: { error: "Can't create doctor from a users endpoint" },
+    render json: { error: "Can't create doctor from a /#{params[:controller]} endpoint" },
            status: :forbidden
   end
 end
