@@ -23,6 +23,16 @@ class Api::V1::DoctorsController < ApplicationController
     }, status: :ok
   end
 
+  def update
+    @doctor.update(user_params)
+    head :no_content
+  end
+
+  def destroy
+    @doctor.destroy
+    head :no_content
+  end
+
   private
 
   def user_params
