@@ -11,7 +11,8 @@ class Api::V1::DoctorsController < ApplicationController
     @doctor = User.create!(user_params)
     render json: @doctors, status: :created
 
-    #   NOTE: Http response sending before_action check even when missing parameters are name, email or phone. Fix later.
+    #   NOTE: Http response sending before_action check even when missing
+    #   parameters are name, email or phone. Fix later.
   end
 
   def show
@@ -45,7 +46,7 @@ class Api::V1::DoctorsController < ApplicationController
   end
 
   def reject_attempt_to_create_user
-    return unless params[:controller] == 'api/v1/doctors' && ( !params[:is_doctor] || !params[:office_address] )
+    return unless params[:controller] == 'api/v1/doctors' && (!params[:is_doctor] || !params[:office_address])
 
     render json: { error: "Can't create user from a /#{params[:controller]} endpoint" },
            status: :forbidden
