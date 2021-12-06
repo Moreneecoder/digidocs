@@ -46,34 +46,61 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  # Test suite for POST /todos
-  describe 'POST /api/v1/users' do
-    # valid payload
-    let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com' } }
-
-    context 'when the request is valid' do
-      before { post '/api/v1/users', params: valid_attributes }
-
-      it 'creates a user' do
-        expect(json['message']).to eq('User Learn Elm created successfully')
+    # Test suite for POST /todos
+    describe 'POST /api/v1/users' do
+      # valid payload
+      let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com' } }
+  
+      context 'when the request is valid' do
+        before { post '/api/v1/users', params: valid_attributes }
+  
+        it 'creates a user' do
+          expect(json['message']).to eq('User Learn Elm created successfully')
+        end
+  
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
       end
-
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
+  
+      context 'when the request is invalid' do
+        before { post '/api/v1/users', params: { name: 'Foobar' } }
+  
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+  
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match(/Validation failed: Phone can't be blank/)
+        end
       end
     end
 
-    context 'when the request is invalid' do
-      before { post '/api/v1/users', params: { name: 'Foobar' } }
+    # Test suite for PUT /todos/:id
+  describe 'PUT /api/v1/users/:id' do
+    let(:valid_attributes) { { name: 'Chun Li' } }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+    context 'when the record exists' do
+      before { put "/api/v1/users/#{user_id}", params: valid_attributes }
+
+      it 'updates the record' do
+        expect(response.body).to be_empty
       end
 
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/Validation failed: Phone can't be blank/)
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
       end
     end
   end
+
+  # Test suite for DELETE /todos/:id
+  describe 'DELETE /api/v1/users/:id' do
+    before { delete "/api/v1/users/#{user_id}" }
+
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+  end
+
 end
