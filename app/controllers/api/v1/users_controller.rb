@@ -34,8 +34,6 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    # whitelist params
-    # params.permit(:name, :phone, :email, :office_address, :is_doctor)
     params.permit(:name, :phone, :email)
   end
 

@@ -46,52 +46,54 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-    # Test suite for POST /todos
-    describe 'POST /api/v1/users' do
-      # valid payload
-      let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com' } }
-  
-      context 'when the request is valid' do
-        before { post '/api/v1/users', params: valid_attributes }
-  
-        it 'creates a user' do
-          expect(json['message']).to eq('User Learn Elm created successfully')
-        end
-  
-        it 'returns status code 201' do
-          expect(response).to have_http_status(201)
-        end
-      end
-  
-      context 'when the request is invalid' do
-        before { post '/api/v1/users', params: { name: 'Foobar' } }
-  
-        it 'returns status code 422' do
-          expect(response).to have_http_status(422)
-        end
-  
-        it 'returns a validation failure message' do
-          expect(response.body)
-            .to match(/Validation failed: Phone can't be blank/)
-        end
+  # Test suite for POST /todos
+  describe 'POST /api/v1/users' do
+    # valid payload
+    let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com' } }
+
+    context 'when the request is valid' do
+      before { post '/api/v1/users', params: valid_attributes }
+
+      it 'creates a user' do
+        expect(json['message']).to eq('User Learn Elm created successfully')
       end
 
-      context 'when user endpoint tries to create a doctor' do
-        let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com', is_doctor: true } }        
-        before { post '/api/v1/users', params: valid_attributes }
-
-        it 'returns forbidden status code 403' do
-          expect(response).to have_http_status(403)
-        end
-
-        it 'returns a forbidden request failure message' do
-          expect(json['error'])
-            .to eq("Can't create doctor from a /api/v1/users endpoint")
-        end
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
       end
     end
 
-    # Test suite for PUT /todos/:id
+    context 'when the request is invalid' do
+      before { post '/api/v1/users', params: { name: 'Foobar' } }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation failure message' do
+        expect(response.body)
+          .to match(/Validation failed: Phone can't be blank/)
+      end
+    end
+
+    context 'when user endpoint tries to create a doctor' do
+      let(:valid_attributes) do
+        { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com', is_doctor: true }
+      end
+      before { post '/api/v1/users', params: valid_attributes }
+
+      it 'returns forbidden status code 403' do
+        expect(response).to have_http_status(403)
+      end
+
+      it 'returns a forbidden request failure message' do
+        expect(json['error'])
+          .to eq("Can't create doctor from a /api/v1/users endpoint")
+      end
+    end
+  end
+
+  # Test suite for PUT /todos/:id
   describe 'PUT /api/v1/users/:id' do
     let(:valid_attributes) { { name: 'Chun Li' } }
 
@@ -116,5 +118,4 @@ RSpec.describe 'Users', type: :request do
       expect(response).to have_http_status(204)
     end
   end
-
 end
