@@ -14,6 +14,7 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     render json: {
+      id: @patient.id,
       name: @patient.name,
       phone: @patient.phone,
       email: @patient.email
