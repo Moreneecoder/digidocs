@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'pp'
 
 RSpec.describe 'Users', type: :request do
   let!(:users) { create_list(:user, 10) }
@@ -25,7 +24,6 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the record exists' do
       it 'returns the user with the given id' do
-        pp user_id
         expect(json).not_to be_empty
         expect(json['id']).to eq(users.first.id)
       end
@@ -38,7 +36,7 @@ RSpec.describe 'Users', type: :request do
     context 'when the record does not exist' do
       let(:user_id) { 100 }
 
-      it 'returns status code 404' do        
+      it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
 
