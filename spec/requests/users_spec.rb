@@ -75,6 +75,20 @@ RSpec.describe 'Users', type: :request do
             .to match(/Validation failed: Phone can't be blank/)
         end
       end
+
+      context 'when user endpoint tries to create a doctor' do
+        let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com', is_doctor: true } }        
+        before { post '/api/v1/users', params: valid_attributes }
+
+        it 'returns forbidden status code 403' do
+          expect(response).to have_http_status(403)
+        end
+
+        it 'returns a forbidden request failure message' do
+          expect(json['error'])
+            .to eq("Can't create doctor from a /api/v1/users endpoint")
+        end
+      end
     end
 
     # Test suite for PUT /todos/:id
