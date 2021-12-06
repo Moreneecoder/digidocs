@@ -13,7 +13,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def create
-    @appointment = @patient.appointments.build(appointment_params);
+    @appointment = @patient.appointments.build(appointment_params)
     @appointment.save!
 
     render json: @appointment, status: :created
@@ -55,21 +55,21 @@ class Api::V1::AppointmentsController < ApplicationController
   def prevent_doctor_from_creating_appointment
     return if params[:user_id]
 
-    render json: { error: "Doctors cannot create appointment" },
+    render json: { error: 'Doctors cannot create appointment' },
            status: :forbidden
   end
 
   def prevent_doctor_from_updating_appointment
     return if params[:user_id]
 
-    render json: { error: "Doctors cannot edit appointment" },
+    render json: { error: 'Doctors cannot edit appointment' },
            status: :forbidden
   end
 
   def prevent_doctor_from_deleting_appointment
     return if params[:user_id]
 
-    render json: { error: "Doctors cannot delete appointment" },
+    render json: { error: 'Doctors cannot delete appointment' },
            status: :forbidden
   end
 end
