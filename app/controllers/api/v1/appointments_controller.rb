@@ -53,7 +53,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def doctor_url
-    regex = /\/api\/v1\/doctors/
+    regex = %r{/api/v1/doctors}
     regex.match(request.fullpath)
   end
 
