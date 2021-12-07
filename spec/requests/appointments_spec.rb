@@ -90,7 +90,7 @@ RSpec.describe 'Appointments', type: :request do
   end
 
   # Test suite for POST /api/v1/users/:user_id/appointments/'
-  describe 'POST /api/v1/users/:user_id/appointments/' do
+  describe 'POST /api/v1/users/:user_id/appointments' do
     let(:valid_params) do
       { user_id: user_id, doctor_id: doctor_id, title: 'Tooth Ache Treatment', description: 'I wan see you ooo', time: rand(1.year).seconds.ago }
     end
@@ -125,8 +125,78 @@ RSpec.describe 'Appointments', type: :request do
       it 'returns a failure message' do
         expect(response.body).to match(/Doctors cannot create appointment/)
       end
+    end  
+  end
+
+  # Test suite for PUT /api/v1/users/:user_id/appointments/:id
+  describe 'PUT /api/v1/users/:user_id/appointments/:id' do
+    let(:valid_params) { { title: 'Ante Natal' } }
+    before { put "/api/v1/users/#{user_id}/appointments/#{appointment_id}", params: valid_params }
+
+    context 'when appointment exists' do
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+
+      it 'updates the appointment' do
+        updated_item = Appointment.find(appointment_id)
+        expect(updated_item.title).to match(/Ante Natal/)
+      end
     end
-    
+
+    context 'when the appointment does not exist' do
+      let(:appointment_id) { 0 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find Appointment/)
+      end
+    end
+
+    context 'when doctor tries to update appointment' do
+      before { put "/api/v1/doctors/#{doctor_id}/appointments/#{appointment_id}", params: valid_params }
+
+      it 'returns forbidden status code of 403' do
+        expect(response).to have_http_status(403)
+      end
+
+      it 'returns a failure message' do
+        expect(response.body).to match(/Doctors cannot update appointment/)
+      end
+    end
+  end
+
+  # Test suite for DELETE /todos/:id
+  describe 'DELETE /todos/:id' do
+    before { delete "/api/v1/users/#{user_id}/appointments/#{appointment_id}" }
+    context 'when appointment exists' do
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'when the appointment does not exist' do
+      let(:appointment_id) { 0 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    context 'when doctor tries to delete appointment' do
+      before { delete "/api/v1/doctors/#{doctor_id}/appointments/#{appointment_id}" }
+
+      it 'returns forbidden status code of 403' do
+        expect(response).to have_http_status(403)
+      end
+
+      it 'returns a failure message' do
+        expect(response.body).to match(/Doctors cannot delete appointment/)
+      end
+    end
   end
 
 end
