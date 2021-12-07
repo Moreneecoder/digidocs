@@ -52,24 +52,25 @@ class Api::V1::AppointmentsController < ApplicationController
     params.permit(:user_id, :doctor_id, :title, :description, :time)
   end
 
-  def prevent_doctor_from_creating_appointment
-    return if params[:user_id]
+  def doctor_url
+    regex = /\/api\/v1\/doctors/
+    regex.match(request.fullpath)
+  end
 
-    render json: { error: 'Doctors cannot create appointment' },
+  def render_forbidden(param)
+    render json: { error: "Doctors cannot #{param} appointment" },
            status: :forbidden
+  end
+
+  def prevent_doctor_from_creating_appointment
+    render_forbidden('create') if doctor_url
   end
 
   def prevent_doctor_from_updating_appointment
-    return if params[:user_id]
-
-    render json: { error: 'Doctors cannot edit appointment' },
-           status: :forbidden
+    render_forbidden('update') if doctor_url
   end
 
   def prevent_doctor_from_deleting_appointment
-    return if params[:user_id]
-
-    render json: { error: 'Doctors cannot delete appointment' },
-           status: :forbidden
+    render_forbidden('delete') if doctor_url
   end
 end
