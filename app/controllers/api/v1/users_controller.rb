@@ -36,8 +36,8 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     # parsed_params = JSON.parse(params)
-    p params[:user]
-    params.require(:user).permit(:name, :phone, :email)
+    p params
+    params.permit(:name, :phone, :email)
   end
 
   def set_user
