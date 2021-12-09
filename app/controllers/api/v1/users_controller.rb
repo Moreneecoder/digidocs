@@ -9,8 +9,7 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     @patient = User.create!(user_params)
-    # render json: { message: "User #{@patient.name} created successfully" }, status: :created
-    render json: @patient
+    render json: { message: "User #{@patient.name} created successfully" }, status: :created    
   end
 
   def show
