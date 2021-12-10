@@ -27,6 +27,11 @@ class Api::V1::UsersController < ApplicationController
     head :no_content
   end
 
+  def login
+    @user = User.where(name: params[:name], email: params[:email]).first
+    render json: { status: 200, user: @user }, status: :ok
+  end
+
   def destroy
     @patient.destroy
     head :no_content
@@ -34,9 +39,11 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
+  def login_params
+    params.require(:name, :email)
+  end
+
   def user_params
-    # parsed_params = JSON.parse(params)
-    p params
     params.permit(:name, :phone, :email)
   end
 
