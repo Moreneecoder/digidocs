@@ -7,9 +7,20 @@ class Api::V1::AppointmentsController < ApplicationController
   before_action :set_appointment, only: %i[show update destroy]
 
   def index
-    @appointments = @target_user.appointments if params[:user_id]
-    @appointments = @target_user.inverse_appointments if params[:doctor_id]
-    render json: @appointments
+    if patient_url
+      p @appointments = @target_user.appointments.includes(:doctor)
+
+      response = @appointments.map do |appointment|
+        { appointment: appointment, doctor: User.find(appointment.doctor_id) }
+      end
+    elsif doctor_url
+      @appointments = @target_user.inverse_appointments
+      response = @appointments.map do |appointment|
+        { appointment: appointment, patient: User.find(appointment.user_id) }
+      end
+    end
+
+    render json: response, status: :ok
   end
 
   def create
@@ -34,8 +45,8 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def set_user_variables
-    @target_user = User.patient.find(params[:user_id]) if params[:user_id]
-    @target_user = User.doctor.find(params[:doctor_id]) if params[:doctor_id]
+    @target_user = User.patient.find(params[:user_id]) if patient_url
+    @target_user = User.doctor.find(params[:doctor_id]) if doctor_url
   end
 
   def set_patient
@@ -43,8 +54,8 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def set_appointment
-    @appointment = @target_user.appointments.find(params[:id]) if params[:user_id]
-    @appointment = @target_user.inverse_appointments.find(params[:id]) if params[:doctor_id]
+    @appointment = @target_user.appointments.find(params[:id]) if patient_url
+    @appointment = @target_user.inverse_appointments.find(params[:id]) if doctor_url
   end
 
   def appointment_params
@@ -54,6 +65,11 @@ class Api::V1::AppointmentsController < ApplicationController
 
   def doctor_url
     regex = %r{/api/v1/doctors}
+    regex.match(request.fullpath)
+  end
+
+  def patient_url
+    regex = %r{/api/v1/users}
     regex.match(request.fullpath)
   end
 

@@ -32,7 +32,7 @@ class Api::V1::UsersController < ApplicationController
     if @user
       render json: { status: 200, user: @user }, status: :ok
     else
-      render json: {status: 404, message: 'User not found'}, status: :not_found
+      render json: { status: 404, message: 'User not found' }, status: :not_found
     end
   end
 
