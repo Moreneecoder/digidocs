@@ -8,15 +8,15 @@ class Api::V1::AppointmentsController < ApplicationController
 
   def index
     if patient_url
-      p @appointments = @target_user.appointments.includes(:doctor)
+      @appointments = @target_user.appointments.includes(:doctor)
 
       response = @appointments.map do |appointment|
-        { appointment: appointment, doctor: User.find(appointment.doctor_id) }
+        json_structure(appointment, 'doctor')
       end
     elsif doctor_url
       @appointments = @target_user.inverse_appointments
       response = @appointments.map do |appointment|
-        { appointment: appointment, patient: User.find(appointment.user_id) }
+        json_structure(appointment, 'patient')
       end
     end
 
@@ -31,7 +31,9 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def show
-    render json: @appointment, status: :ok
+    response = json_structure(@appointment, 'doctor') if patient_url
+    response = json_structure(@appointment, 'patient') if doctor_url
+    render json: response, status: :ok
   end
 
   def update
@@ -61,6 +63,13 @@ class Api::V1::AppointmentsController < ApplicationController
   def appointment_params
     # whitelist params
     params.permit(:user_id, :doctor_id, :title, :description, :time)
+  end
+
+  def json_structure(app, role)
+    role_id = :user_id if role == 'patient'
+    role_id = :doctor_id if role == 'doctor'
+
+    { appointment: app, role => User.find(app[role_id]) }
   end
 
   def doctor_url
