@@ -1,3 +1,5 @@
+require 'date'
+
 class Api::V1::AppointmentsController < ApplicationController
   before_action :set_user_variables, only: %i[index show update destroy]
   before_action :prevent_doctor_from_creating_appointment, only: %i[create]
@@ -24,6 +26,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def create
+    # p Time.at(1318996912).to_datetime
     @appointment = @patient.appointments.build(appointment_params)
     @appointment.save!
 
@@ -31,6 +34,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def show
+    # p Time.at(1318996912).to_datetime
     response = json_structure(@appointment, 'doctor') if patient_url
     response = json_structure(@appointment, 'patient') if doctor_url
     render json: response, status: :ok
