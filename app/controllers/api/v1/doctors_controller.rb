@@ -11,9 +11,6 @@ class Api::V1::DoctorsController < ApplicationController
     @doctor = User.create!(user_params)
     render json: { status: 201, doctor: @doctor, message: "Doctor #{@doctor.name} created successfully" },
            status: :created
-
-    #   NOTE: Http response sending before_action check even when missing
-    #   parameters are name, email or phone. Fix later.
   end
 
   def show
@@ -38,8 +35,7 @@ class Api::V1::DoctorsController < ApplicationController
 
   private
 
-  def user_params
-    # whitelist params
+  def user_params    
     params.permit(:name, :phone, :email, :office_address, :is_doctor)
   end
 

@@ -25,16 +25,14 @@ class Api::V1::AppointmentsController < ApplicationController
     render json: response, status: :ok
   end
 
-  def create
-    # p Time.at(1318996912).to_datetime
+  def create    
     @appointment = @patient.appointments.build(appointment_params)
     @appointment.save!
 
     render json: @appointment, status: :created
   end
 
-  def show
-    # p Time.at(1318996912).to_datetime
+  def show    
     response = json_structure(@appointment, 'doctor') if patient_url
     response = json_structure(@appointment, 'patient') if doctor_url
     render json: response, status: :ok
@@ -64,8 +62,7 @@ class Api::V1::AppointmentsController < ApplicationController
     @appointment = @target_user.inverse_appointments.find(params[:id]) if doctor_url
   end
 
-  def appointment_params
-    # whitelist params
+  def appointment_params    
     params.permit(:user_id, :doctor_id, :title, :description, :time)
   end
 

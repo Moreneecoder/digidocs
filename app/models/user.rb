@@ -10,7 +10,6 @@ class User < ApplicationRecord
   has_many :inverse_appointments, class_name: 'Appointment', foreign_key: 'doctor_id'
 
   def doctors
-    # appointments.includes(:doctor).map { |appointment| appointment.doctor }.compact
     appointments.includes(:doctor).map(&:doctor).compact
   end
 
