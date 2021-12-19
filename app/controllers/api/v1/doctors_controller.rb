@@ -9,7 +9,7 @@ class Api::V1::DoctorsController < ApplicationController
 
   def create
     @doctor = User.create!(user_params)
-    render json: { status: 201, doctor: @doctor.id, message: "Doctor #{@doctor.name} created successfully" },
+    render json: { status: 201, doctor: @doctor, message: "Doctor #{@doctor.name} created successfully" },
            status: :created
 
     #   NOTE: Http response sending before_action check even when missing
