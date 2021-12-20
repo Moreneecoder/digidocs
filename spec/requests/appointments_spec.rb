@@ -59,8 +59,8 @@ RSpec.describe 'Appointments', type: :request do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns the single appointment' do
-        expect(json['id']).to eq(appointment_id)
+      it 'returns the single appointment' do        
+        expect(json['appointment']['id']).to eq(appointment_id)
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe 'Appointments', type: :request do
       end
 
       it 'returns the single doctor appointment' do
-        expect(json['id']).to eq(appointment_id)
+        expect(json['appointment']['id']).to eq(appointment_id)
       end
     end
   end

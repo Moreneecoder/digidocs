@@ -47,7 +47,7 @@ RSpec.describe 'Users', type: :request do
   end
 
   # Test suite for POST /todos
-  describe 'POST /api/v1/users' do    
+  describe 'POST /api/v1/users' do
     let(:valid_attributes) { { name: 'Learn Elm', phone: '12345678901', email: 'foo@bar.com' } }
 
     context 'when the request is valid' do

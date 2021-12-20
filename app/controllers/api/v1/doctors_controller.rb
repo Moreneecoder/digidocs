@@ -35,7 +35,7 @@ class Api::V1::DoctorsController < ApplicationController
 
   private
 
-  def user_params    
+  def user_params
     params.permit(:name, :phone, :email, :office_address, :is_doctor)
   end
 
