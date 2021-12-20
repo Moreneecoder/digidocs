@@ -55,7 +55,7 @@ To set up a local version of this project, a collection of steps have been put t
 While there are a couple of cloud services for deployment, it is recommended to use Heroku for deploying this project. Follow this [heroku official deployment guide](https://devcenter.heroku.com/articles/getting-started-with-rails6#deploy-your-application-to-heroku) to deploy your application to heroku.
 
 ## Endpoints
-_Base URL_: `https://gentle-taiga-27732.herokuapp.com/`
+_Base URL_: `https://keji-digidocs.herokuapp.com/`
 
 |Description|Method|Endpoint|
 |:---|:---|:---|
