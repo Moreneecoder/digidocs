@@ -13,7 +13,7 @@ class Api::V1::AppointmentsController < ApplicationController
       @appointments = @target_user.appointments.includes(:doctor)
       response = @appointments.to_json({include: :doctor})
     elsif doctor_url
-      @appointments = @target_user.inverse_appointments
+      @appointments = @target_user.inverse_appointments.includes(:user)
       response = @appointments.to_json({include: :user})
     end
 
@@ -28,8 +28,8 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def show
-    response = json_structure(@appointment, 'doctor') if patient_url
-    response = json_structure(@appointment, 'patient') if doctor_url
+    response = @appointment.to_json({include: :doctor}) if patient_url
+    response = @appointment.to_json({include: :user}) if doctor_url
     render json: response, status: :ok
   end
 
