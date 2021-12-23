@@ -9,9 +9,7 @@ Rails.application.routes.draw do
 
       resources :doctors do
         resources :appointments
-      end
-
-      # resources :appointments
+      end      
     end
   end
 end
