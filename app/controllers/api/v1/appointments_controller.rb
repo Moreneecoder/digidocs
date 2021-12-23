@@ -11,15 +11,10 @@ class Api::V1::AppointmentsController < ApplicationController
   def index
     if patient_url
       @appointments = @target_user.appointments.includes(:doctor)
-
-      response = @appointments.map do |appointment|
-        json_structure(appointment, 'doctor')
-      end
+      response = @appointments.to_json({include: :doctor})
     elsif doctor_url
       @appointments = @target_user.inverse_appointments
-      response = @appointments.map do |appointment|
-        json_structure(appointment, 'patient')
-      end
+      response = @appointments.to_json({include: :user})
     end
 
     render json: response, status: :ok
