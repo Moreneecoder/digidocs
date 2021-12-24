@@ -60,7 +60,11 @@ RSpec.describe 'Appointments', type: :request do
       end
 
       it 'returns the single appointment' do
-        expect(json['appointment']['id']).to eq(appointment_id)
+        expect(json['id']).to eq(appointment_id)
+      end
+
+      it 'returns the doctor details as subhash of appointment' do
+        expect(json['doctor']['id']).to eq(doctor_id)
       end
     end
 
@@ -84,7 +88,11 @@ RSpec.describe 'Appointments', type: :request do
       end
 
       it 'returns the single doctor appointment' do
-        expect(json['appointment']['id']).to eq(appointment_id)
+        expect(json['id']).to eq(appointment_id)
+      end
+
+      it 'returns the user details as a subhash of single doctor appointment' do
+        expect(json['user']['id']).to eq(user_id)
       end
     end
   end
