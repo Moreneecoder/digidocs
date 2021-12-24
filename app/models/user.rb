@@ -16,4 +16,30 @@ class User < ApplicationRecord
   def patients
     inverse_appointments.includes(:user).map(&:user).compact
   end
+
+  def get_appointment(id, url)
+    if patient_url(url)    
+      appointments.find(id)
+    elsif doctor_url(url)
+      inverse_appointments.find(id)
+    end    
+  end
+
+  def get_appointments(id, url)
+    if patient_url(url)    
+      appointments.includes(:doctor).to_json({include: :doctor})
+    elsif doctor_url(url)
+      inverse_appointments.includes(:user).to_json({include: :user})
+    end    
+  end
+
+  def doctor_url(url)
+    regex = %r{/api/v1/doctors}
+    regex.match(url)
+  end
+
+  def patient_url(url)    
+    regex = %r{/api/v1/users}
+    regex.match(url)
+  end
 end

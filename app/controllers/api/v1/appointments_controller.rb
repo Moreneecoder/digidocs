@@ -1,7 +1,7 @@
 require 'date'
 
 class Api::V1::AppointmentsController < ApplicationController
-  before_action :set_user_variables, only: %i[index show update destroy]
+  before_action :set_target_user, only: %i[index show update destroy]
   before_action :prevent_doctor_from_creating_appointment, only: %i[create]
   before_action :prevent_doctor_from_updating_appointment, only: %i[update]
   before_action :prevent_doctor_from_deleting_appointment, only: %i[destroy]
@@ -9,28 +9,19 @@ class Api::V1::AppointmentsController < ApplicationController
   before_action :set_appointment, only: %i[show update destroy]
 
   def index
-    if patient_url
-      @appointments = @target_user.appointments.includes(:doctor)
-      response = @appointments.to_json({include: :doctor})
-    elsif doctor_url
-      @appointments = @target_user.inverse_appointments.includes(:user)
-      response = @appointments.to_json({include: :user})
-    end
-
-    render json: response, status: :ok
+    @appointments = @target_user.get_appointments(params[:id], url)
+    render json: @appointments, status: :ok
   end
 
   def create
-    @appointment = @patient.appointments.build(appointment_params)
-    @appointment.save!
+    appointment = @patient.appointments.build(appointment_params)
+    appointment.save!
 
-    render json: @appointment, status: :created
+    render json: appointment, status: :created
   end
 
   def show
-    response = @appointment.to_json({include: :doctor}) if patient_url
-    response = @appointment.to_json({include: :user}) if doctor_url
-    render json: response, status: :ok
+    render json: @appointment.with_user_data(url), status: :ok
   end
 
   def update
@@ -43,7 +34,7 @@ class Api::V1::AppointmentsController < ApplicationController
     head :no_content
   end
 
-  def set_user_variables
+  def set_target_user
     @target_user = User.patient.find(params[:user_id]) if patient_url
     @target_user = User.doctor.find(params[:doctor_id]) if doctor_url
   end
@@ -52,20 +43,16 @@ class Api::V1::AppointmentsController < ApplicationController
     @patient = User.patient.find(params[:user_id])
   end
 
-  def set_appointment
-    @appointment = @target_user.appointments.find(params[:id]) if patient_url
-    @appointment = @target_user.inverse_appointments.find(params[:id]) if doctor_url
+  def set_appointment    
+    @appointment = @target_user.get_appointment(params[:id], url);
   end
 
   def appointment_params
     params.permit(:user_id, :doctor_id, :title, :description, :time)
   end
 
-  def json_structure(app, role)
-    role_id = :user_id if role == 'patient'
-    role_id = :doctor_id if role == 'doctor'
-
-    { appointment: app, role => User.find(app[role_id]) }
+  def url
+    request.fullpath
   end
 
   def doctor_url
