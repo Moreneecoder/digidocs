@@ -43,8 +43,8 @@ class Api::V1::AppointmentsController < ApplicationController
     @patient = User.patient.find(params[:user_id])
   end
 
-  def set_appointment    
-    @appointment = @target_user.get_appointment(params[:id], url);
+  def set_appointment
+    @appointment = @target_user.get_appointment(params[:id], url)
   end
 
   def appointment_params

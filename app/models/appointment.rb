@@ -7,11 +7,11 @@ class Appointment < ApplicationRecord
   belongs_to :doctor, class_name: 'User'
 
   def with_user_data(url)
-    if patient_url(url)    
-      to_json({include: :doctor})
+    if patient_url(url)
+      to_json({ include: :doctor })
     elsif doctor_url(url)
-      to_json({include: :user})
-    end  
+      to_json({ include: :user })
+    end
   end
 
   def doctor_url(url)
@@ -19,7 +19,7 @@ class Appointment < ApplicationRecord
     regex.match(url)
   end
 
-  def patient_url(url)    
+  def patient_url(url)
     regex = %r{/api/v1/users}
     regex.match(url)
   end
