@@ -15,12 +15,12 @@ module AppointmentHelper
     end
   end
 
-  def get_appointment_with_user_data
+  def get_appointment_with_user_data(appointment)
     if patient_url?
-        @appointment.to_json({ include: :doctor })
+      appointment.to_json({ include: :doctor })
     elsif doctor_url?
-        @appointment.to_json({ include: :user })
-    end    
+      appointment.to_json({ include: :user })
+    end
   end
 
   def set_target_user
