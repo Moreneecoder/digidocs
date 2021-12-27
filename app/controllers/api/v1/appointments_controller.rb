@@ -61,6 +61,7 @@ class Api::V1::AppointmentsController < ApplicationController
 
   def render_forbidden(param)
     return unless doctor_url?
+
     render json: { error: "Doctors cannot #{param} appointment" },
            status: :forbidden
   end

@@ -1,6 +1,6 @@
 class Api::V1::LoginController < ApplicationController
-  def create    
-    @user = User.authenticate(login_params).first    
+  def create
+    @user = User.authenticate(login_params).first
     if @user
       render json: { status: 200, user: @user }, status: :ok
     else
@@ -9,6 +9,6 @@ class Api::V1::LoginController < ApplicationController
   end
 
   def login_params
-    params.permit(:name, :email) 
+    params.permit(:name, :email)
   end
 end
