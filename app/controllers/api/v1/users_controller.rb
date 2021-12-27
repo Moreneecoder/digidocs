@@ -33,8 +33,12 @@ class Api::V1::UsersController < ApplicationController
     params.permit(:name, :phone, :email)
   end
 
+  def set_user_params
+    params.permit(:id)
+  end
+
   def set_user
-    @patient = User.patient.find(params[:id])
+    @patient = User.patient.find(set_user_params[:id])
   end
 
   def reject_attempt_to_create_doctor
