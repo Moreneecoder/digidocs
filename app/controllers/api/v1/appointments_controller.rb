@@ -1,6 +1,8 @@
 require 'date'
 
 class Api::V1::AppointmentsController < ApplicationController
+  include AppointmentHelper
+
   before_action :set_target_user, only: %i[index show update destroy]
   before_action :prevent_doctor_from_creating_appointment, only: %i[create]
   before_action :prevent_doctor_from_updating_appointment, only: %i[update]
@@ -34,9 +36,11 @@ class Api::V1::AppointmentsController < ApplicationController
     head :no_content
   end
 
+  private
+
   def set_target_user
-    @target_user = User.patient.find(params[:user_id]) if patient_url
-    @target_user = User.doctor.find(params[:doctor_id]) if doctor_url
+    @target_user = User.patient.find(params[:user_id]) if patient_url?
+    @target_user = User.doctor.find(params[:doctor_id]) if doctor_url?
   end
 
   def set_patient
@@ -44,7 +48,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def set_appointment
-    @appointment = @target_user.get_appointment(params[:id], url)
+    @appointment = get_user_appointment(params[:id])
   end
 
   def appointment_params
@@ -55,30 +59,20 @@ class Api::V1::AppointmentsController < ApplicationController
     request.fullpath
   end
 
-  def doctor_url
-    regex = %r{/api/v1/doctors}
-    regex.match(request.fullpath)
-  end
-
-  def patient_url
-    regex = %r{/api/v1/users}
-    regex.match(request.fullpath)
-  end
-
   def render_forbidden(param)
     render json: { error: "Doctors cannot #{param} appointment" },
            status: :forbidden
   end
 
   def prevent_doctor_from_creating_appointment
-    render_forbidden('create') if doctor_url
+    render_forbidden('create') if doctor_url?
   end
 
   def prevent_doctor_from_updating_appointment
-    render_forbidden('update') if doctor_url
+    render_forbidden('update') if doctor_url?
   end
 
   def prevent_doctor_from_deleting_appointment
-    render_forbidden('delete') if doctor_url
+    render_forbidden('delete') if doctor_url?
   end
 end

@@ -9,21 +9,13 @@ class User < ApplicationRecord
   has_many :appointments, dependent: :destroy
   has_many :inverse_appointments, class_name: 'Appointment', foreign_key: 'doctor_id'
 
-  def doctors
-    appointments.includes(:doctor).map(&:doctor).compact
-  end
-
-  def patients
-    inverse_appointments.includes(:user).map(&:user).compact
-  end
-
-  def get_appointment(id, url)
-    if patient_url(url)
-      appointments.find(id)
-    elsif doctor_url(url)
-      inverse_appointments.find(id)
-    end
-  end
+  # def get_appointment(id, url)
+  #   if patient_url(url)
+  #     appointments.find(id)
+  #   elsif doctor_url(url)
+  #     inverse_appointments.find(id)
+  #   end
+  # end
 
   def get_appointments(_id, url)
     if patient_url(url)
