@@ -1,4 +1,7 @@
 class Api::V1::DoctorsController < ApplicationController
+  include ApplicationHelper
+  include DoctorHelper
+
   before_action :set_doctor, only: %i[show update destroy]
   before_action :reject_attempt_to_create_user, only: %i[create]
 
@@ -33,14 +36,11 @@ class Api::V1::DoctorsController < ApplicationController
     params.permit(:name, :phone, :email, :office_address, :is_doctor)
   end
 
-  def set_doctor
-    @doctor = User.doctor.find(params[:id])
+  def set_doctor_params
+    params.permit(:id)
   end
 
-  def reject_attempt_to_create_user
-    return unless params[:controller] == 'api/v1/doctors' && (!params[:is_doctor] || !params[:office_address])
-
-    render json: { error: "Can't create user from a /#{params[:controller]} endpoint" },
-           status: :forbidden
+  def set_doctor
+    @doctor = User.doctor.find(set_doctor_params[:id])
   end
 end

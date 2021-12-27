@@ -39,16 +39,24 @@ class Api::V1::AppointmentsController < ApplicationController
 
   private
 
+  def appointment_params
+    params.permit(:user_id, :doctor_id, :title, :description, :time)
+  end
+
+  def set_patient_params
+    params.permit(:user_id)
+  end
+
+  def set_appointment_params
+    params.permit(:id)
+  end
+
   def set_patient
-    @patient = User.patient.find(params[:user_id])
+    @patient = User.patient.find(set_patient_params[:user_id])
   end
 
   def set_appointment
-    @appointment = get_user_appointment(params[:id])
-  end
-
-  def appointment_params
-    params.permit(:user_id, :doctor_id, :title, :description, :time)
+    @appointment = get_user_appointment(set_appointment_params[:id])
   end
 
   def render_forbidden(param)
