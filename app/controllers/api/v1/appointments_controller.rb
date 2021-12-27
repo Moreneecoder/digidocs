@@ -1,6 +1,7 @@
 require 'date'
 
 class Api::V1::AppointmentsController < ApplicationController
+  include ApplicationHelper
   include AppointmentHelper
 
   before_action :set_target_user, only: %i[index show update destroy]
@@ -11,7 +12,7 @@ class Api::V1::AppointmentsController < ApplicationController
   before_action :set_appointment, only: %i[show update destroy]
 
   def index
-    @appointments = @target_user.get_appointments(params[:id], url)
+    @appointments = get_appointments(params[:id])
     render json: @appointments, status: :ok
   end
 
@@ -38,11 +39,6 @@ class Api::V1::AppointmentsController < ApplicationController
 
   private
 
-  def set_target_user
-    @target_user = User.patient.find(params[:user_id]) if patient_url?
-    @target_user = User.doctor.find(params[:doctor_id]) if doctor_url?
-  end
-
   def set_patient
     @patient = User.patient.find(params[:user_id])
   end
@@ -53,10 +49,6 @@ class Api::V1::AppointmentsController < ApplicationController
 
   def appointment_params
     params.permit(:user_id, :doctor_id, :title, :description, :time)
-  end
-
-  def url
-    request.fullpath
   end
 
   def render_forbidden(param)
