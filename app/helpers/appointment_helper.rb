@@ -1,5 +1,5 @@
 module AppointmentHelper
-  def get_appointments(_id)
+  def get_user_appointments(_id)
     if patient_url?
       @target_user.appointments.includes(:doctor).to_json({ include: :doctor })
     elsif doctor_url?

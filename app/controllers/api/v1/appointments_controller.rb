@@ -12,7 +12,7 @@ class Api::V1::AppointmentsController < ApplicationController
   before_action :set_appointment, only: %i[show update destroy]
 
   def index
-    @appointments = get_appointments(params[:id])
+    @appointments = get_user_appointments(params[:id])
     render json: @appointments, status: :ok
   end
 
