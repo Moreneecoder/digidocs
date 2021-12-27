@@ -8,14 +8,4 @@ class User < ApplicationRecord
 
   has_many :appointments, dependent: :destroy
   has_many :inverse_appointments, class_name: 'Appointment', foreign_key: 'doctor_id'
-
-  def doctor_url(url)
-    regex = %r{/api/v1/doctors}
-    regex.match(url)
-  end
-
-  def patient_url(url)
-    regex = %r{/api/v1/users}
-    regex.match(url)
-  end
 end

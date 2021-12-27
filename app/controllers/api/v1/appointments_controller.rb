@@ -24,7 +24,7 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def show
-    render json: @appointment.with_user_data(url), status: :ok
+    render json: get_appointment_with_user_data, status: :ok
   end
 
   def update
