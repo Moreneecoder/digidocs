@@ -52,19 +52,20 @@ class Api::V1::AppointmentsController < ApplicationController
   end
 
   def render_forbidden(param)
+    return unless doctor_url?
     render json: { error: "Doctors cannot #{param} appointment" },
            status: :forbidden
   end
 
   def prevent_doctor_from_creating_appointment
-    render_forbidden('create') if doctor_url?
+    render_forbidden('create')
   end
 
   def prevent_doctor_from_updating_appointment
-    render_forbidden('update') if doctor_url?
+    render_forbidden('update')
   end
 
   def prevent_doctor_from_deleting_appointment
-    render_forbidden('delete') if doctor_url?
+    render_forbidden('delete')
   end
 end

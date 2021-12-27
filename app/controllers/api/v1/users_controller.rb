@@ -14,12 +14,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    render json: {
-      id: @patient.id,
-      name: @patient.name,
-      phone: @patient.phone,
-      email: @patient.email
-    }, status: :ok
+    render json: @patient, status: :ok
   end
 
   def update
